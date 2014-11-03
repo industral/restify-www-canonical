@@ -24,4 +24,16 @@ server.use(wwwCanonical({
 }));
 ```
 
-Please see tests for all cases.
+
+You can also specify `from`, `where` and `code`. You can also use regexp.
+
+
+```
+server.use(wwwCanonical({
+   from: /www\.|127\.0\.0\.1/, // will redirect from `www.example.com` and `127.0.0.1` => `example.com`
+   to: 'example.com',
+   code: 302 // it just example. Better to use 301 which is the default value
+}));
+```
+
+Please see tests for all cases. To run test `npm run-script test`

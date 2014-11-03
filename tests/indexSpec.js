@@ -15,7 +15,6 @@ describe('Restify WWW Canonical', function() {
 
     response = {
       writeHead: function(code, headers) {
-        console.log(code);
       },
 
       end: function() {
@@ -26,19 +25,23 @@ describe('Restify WWW Canonical', function() {
     }
   });
 
-  it('should work without params passing redirect from www.example.com => example.com', function() {
+  it('should work without params passing redirect from www.example.com => example.com', function(done) {
     response.writeHead = function(code, headers) {
-      expect(code).toBe(301);
-      expect(headers.Location).toBe('http://example.com');
+      expect(code).toEqual(301);
+      expect(headers.Location).toEqual('http://example.com');
+
+      done();
     };
 
     wwwCanonical()(request, response, next);
   });
 
-  it('should work with params passing redirect from www.example.com => example.com', function() {
+  it('should work with params passing redirect from www.example.com => example.com', function(done) {
     response.writeHead = function(code, headers) {
-      expect(code).toBe(301);
-      expect(headers.Location).toBe('http://example.com');
+      expect(code).toEqual(301);
+      expect(headers.Location).toEqual('http://example.com');
+
+      done();
     };
 
     wwwCanonical({
@@ -46,10 +49,12 @@ describe('Restify WWW Canonical', function() {
     })(request, response, next);
   });
 
-  it('should work with params passing redirect from www.example.com => example.org', function() {
+  it('should work with params passing redirect from www.example.com => example.org', function(done) {
     response.writeHead = function(code, headers) {
-      expect(code).toBe(301);
-      expect(headers.Location).toBe('http://example.org');
+      expect(code).toEqual(301);
+      expect(headers.Location).toEqual('http://example.org');
+
+      done();
     };
 
     wwwCanonical({
@@ -58,10 +63,12 @@ describe('Restify WWW Canonical', function() {
     })(request, response, next);
   });
 
-  it('should work with params passing redirect from www.example.com => example.org:3000', function() {
+  it('should work with params passing redirect from www.example.com => example.org:3000', function(done) {
     response.writeHead = function(code, headers) {
-      expect(code).toBe(301);
-      expect(headers.Location).toBe('http://example.org:3000');
+      expect(code).toEqual(301);
+      expect(headers.Location).toEqual('http://example.org:3000');
+
+      done();
     };
 
     wwwCanonical({
@@ -70,16 +77,56 @@ describe('Restify WWW Canonical', function() {
     })(request, response, next);
   });
 
-  it('should work with params passing redirect from example.com => www.example.com', function() {
+  it('should work with regex redirect from example.com => www.example.com', function(done) {
     response.writeHead = function(code, headers) {
-      expect(code).toBe(302);
-      expect(headers.Location).toBe('http://example.org:3000');
+      expect(code).toEqual(302);
+      expect(headers.Location).toEqual('http://www.example.com');
+
+      done();
+    };
+
+    request = {
+      headers: {
+        host: 'example.com'
+      }
     };
 
     wwwCanonical({
       from: /^example\.com/,
       to: 'www.example.com',
       code: 302
+    })(request, response, next);
+  });
+
+  it('should work with regex redirect from www.example.com => example.com', function(done) {
+    response.writeHead = function(code, headers) {
+      expect(headers.Location).toEqual('http://example.com');
+
+      done();
+    };
+
+    wwwCanonical({
+      from: /www\.|127\.0\.0\.1/,
+      to: 'example.com'
+    })(request, response, next);
+  });
+
+  it('should work with regex redirect from 127.0.0.1 => example.com', function(done) {
+    response.writeHead = function(code, headers) {
+      expect(headers.Location).toEqual('http://example.com');
+
+      done();
+    };
+
+    request = {
+      headers: {
+        host: '127.0.0.1'
+      }
+    };
+
+    wwwCanonical({
+      from: /www\.|127\.0\.0\.1/,
+      to: 'example.com'
     })(request, response, next);
   });
 
