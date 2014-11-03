@@ -1,0 +1,29 @@
+{
+  "name": "restify-www-canonical",
+  "version": "1.0.0",
+  "description": "Restify WWW Canocalization",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine-node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/industral/restify-www-canonical.git"
+  },
+  "homepage": "https://github.com/industral/restify-www-canonical",
+  "keywords": [
+    "restify",
+    "canonical",
+    "www",
+    "canocalization",
+    "redirect",
+    "301",
+    "seo",
+    "middleware"
+  ],
+  "author": "Alex Ivasyuv",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine-node": ""
+  }
+}
